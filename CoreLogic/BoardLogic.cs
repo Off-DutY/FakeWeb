@@ -28,7 +28,7 @@ namespace CoreLogic
             };
 
             // Http 呼叫 Service 取得資料
-            var resp = await ApiService.PostApi<BoardQueryDto, BoardQueryResp>(queryDto);
+            var resp = await BoardQueryResp(queryDto);
 
             if (!resp.IsSuccess || resp.Items == null)
                 return new IsSuccessResult<BoardListDto>() {ErrorMessage = "Error", IsSuccess = false};
@@ -42,12 +42,12 @@ namespace CoreLogic
             var boardListDto = new BoardListDto
             {
                 BoardListItems = settings
-                                 .Where(s => !s.IsTest)
-                                 .Select(r => new BoardListItem
-                                 {
-                                     Id = r.Id,
-                                     Name = r.Name
-                                 })
+                    .Where(s => !s.IsTest)
+                    .Select(r => new BoardListItem
+                    {
+                        Id = r.Id,
+                        Name = r.Name
+                    })
             };
 
             return new IsSuccessResult<BoardListDto>
@@ -55,6 +55,12 @@ namespace CoreLogic
                 IsSuccess = true,
                 ReturnObject = boardListDto
             };
+        }
+
+        protected virtual async Task<BoardQueryResp> BoardQueryResp(BoardQueryDto queryDto)
+        {
+            var resp = await ApiService.PostApi<BoardQueryDto, BoardQueryResp>(queryDto);
+            return resp;
         }
     }
 }
