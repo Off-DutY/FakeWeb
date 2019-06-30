@@ -25,22 +25,22 @@ namespace CoreLogicTests
         [Test]
         public async Task board_api_has_error()
         {
-            PresetBoardQueryRespFail();
+            PresetBoardApiRespFail();
             var boardList = await _boardLogic.GetBoardList(_defaultSearchParam, DefaultPageSize);
-            ShouldFalseAndHaveErrorMessage(boardList);
+            ResultShouldBe(boardList, false, "Error");
         }
 
-        private static void ShouldFalseAndHaveErrorMessage(IsSuccessResult<BoardListDto> boardList)
+        private static void ResultShouldBe(IsSuccessResult<BoardListDto> boardList, bool isSuccess, string errorMessage)
         {
             var expect = new IsSuccessResult<BoardListDto>()
             {
-                IsSuccess = false,
-                ErrorMessage = "Error"
+                IsSuccess = isSuccess,
+                ErrorMessage = errorMessage
             };
             boardList.ToExpectedObject().ShouldMatch(expect);
         }
 
-        private void PresetBoardQueryRespFail()
+        private void PresetBoardApiRespFail()
         {
             _boardLogic.SetBoardQueryResp(new BoardQueryResp()
             {
